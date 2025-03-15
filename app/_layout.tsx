@@ -1,39 +1,63 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
-import 'react-native-reanimated';
-
-import { useColorScheme } from '@/hooks/useColorScheme';
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
+import { Stack } from "expo-router";
+import "react-native-reanimated";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
+import Alert from "@/components/test";
+import { useThemeStore } from "@/store/useThemeStore";
+import * as NavigationBar from "expo-navigation-bar"; // Import the package
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { View } from "react-native";
 
 export default function RootLayout() {
-  const colorScheme = useColorScheme();
-  const [loaded] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-  });
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
+  const { theme } = useThemeStore();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="+not-found" />
-      </Stack>
-      <StatusBar style="auto" />
+    <ThemeProvider>
+      <SafeAreaProvider>
+        <StatusBar backgroundColor="black" />
+        <Alert />
+
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              title: "",
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="home"
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="progress"
+            options={{
+              title: "Progress",
+              headerTitleAlign: "center",
+              headerRight: () => (
+                <View>
+                  <ThemeToggle />
+                </View>
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="+not-found"
+            options={{
+              title: "Not Found",
+              headerTitleAlign: "center",
+              headerRight: () => (
+                <View>
+                  <ThemeToggle />
+                </View>
+              ),
+            }}
+          />
+        </Stack>
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }
