@@ -16,7 +16,7 @@ const SplashScreen = () => {
     animation.start();
 
     const timer = setTimeout(() => {
-      router.replace("/home");
+      router.replace("/timer");
     }, 5000);
 
     return () => {
@@ -53,11 +53,12 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 16,
-    backgroundColor: "#f3e4e4",
+    backgroundColor: "rgb(30, 101, 134)",
   },
   text: {
     fontSize: 32,
     marginBottom: 20,
+    color: "white",
   },
   progressBarContainer: {
     width: "100%",
@@ -66,13 +67,13 @@ const styles = StyleSheet.create({
   progressBarBackground: {
     height: 30,
     width: "100%",
-    backgroundColor: "#e8edec",
+    backgroundColor: "white",
     borderRadius: 15,
     overflow: "hidden",
   },
   progressBarFill: {
     height: "100%",
-    backgroundColor: "#1d4566",
+    backgroundColor: "#06d474",
     borderRadius: 15,
   },
 });

@@ -1,27 +1,16 @@
-import {
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  StyleSheet,
-  Modal,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, Modal } from "react-native";
 import React, { useEffect, useRef } from "react";
 import * as Animatable from "react-native-animatable";
-import { useThemeStore } from "@/store/useThemeStore";
-import {
-  useErrorStore,
-  useModalStore,
-  useStudyConfigStore,
-} from "@/store/useStudyStore";
+import { themeStore } from "@/stores/themeStore";
+import { errorStore, useModalStore, studyConfigStore } from "@/stores";
 import Button from "../button/Button";
 
 const StudySettingsModal = () => {
-  const { setStudySettings, studySettings } = useStudyConfigStore();
-  const { errors, setErrors } = useErrorStore();
+  const { setStudySettings, studySettings } = studyConfigStore();
+  const { errors, setErrors } = errorStore();
   const { toggleModal, isModalVisible } = useModalStore();
   const viewRef = useRef<Animatable.View>(null);
-  const { theme } = useThemeStore();
+  const { theme } = themeStore();
   const styles = getStyles(theme);
 
   const breakIntervalRef = useRef("");
@@ -54,7 +43,6 @@ const StudySettingsModal = () => {
     value: string,
     inputRef: React.MutableRefObject<string>
   ) => {
-    // Allow only numbers
     inputRef.current = value;
 
     // Clear errors if a valid value is entered
@@ -72,7 +60,7 @@ const StudySettingsModal = () => {
     const isValid = breakInterval > 0 && breakFrequency > 0;
 
     if (!isValid) {
-      useErrorStore.setState(() => ({
+      errorStore.setState(() => ({
         errors: {
           breakInterval: breakInterval <= 0,
           breakFrequency: breakFrequency <= 0,
@@ -83,7 +71,7 @@ const StudySettingsModal = () => {
         breakInterval,
         breakFrequency,
       });
-      useStudyConfigStore.setState({ isConfigured: true });
+      studyConfigStore.setState({ isConfigured: true });
       toggleModal();
     }
   };
@@ -160,7 +148,7 @@ const StudySettingsModal = () => {
             </View>
           </View>
 
-          <View style={styles.buttonsDiv}>
+          <View style={styles.buttonsContainer}>
             <Button
               title="Set up"
               onPress={saveStudySettings}
@@ -185,6 +173,7 @@ const getStyles = (theme: any) =>
   StyleSheet.create({
     centeredView: {
       flex: 1,
+      maxWidth: 600,
       justifyContent: "center",
       alignItems: "center",
       backgroundColor: theme.modalBackground,
@@ -192,12 +181,12 @@ const getStyles = (theme: any) =>
     },
     modalView: {
       width: "100%",
-      backgroundColor: theme.surfaceContainer,
+      backgroundColor: theme.surface,
       borderRadius: 20,
       paddingHorizontal: 32,
       paddingVertical: 40,
       gap: 24,
-      shadowColor: theme.primary,
+      shadowColor: theme.surface,
       shadowOffset: {
         width: 0,
         height: 4,
@@ -217,21 +206,21 @@ const getStyles = (theme: any) =>
     studySettingsModalInput: {
       padding: 8,
       fontSize: 16,
-      borderRadius: 4,
-      borderBlockColor: theme.outlineVariant,
-      backgroundColor: theme.surfaceBright,
-      color: theme.onSurface,
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: theme.outline,
+      backgroundColor: "white",
     },
     errorText: {
       color: theme.error,
       fontSize: 14,
       marginTop: 10,
     },
-    buttonsDiv: {
-      width: "100%",
+    buttonsContainer: {
       flexDirection: "row",
-      gap: 24,
-      paddingTop: 16,
+      justifyContent: "space-between",
+      marginTop: 16,
+      width: "100%",
     },
   });
 

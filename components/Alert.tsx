@@ -1,12 +1,13 @@
 import React from "react";
 import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
-import { useAlertStore } from "@/store/useStudyStore";
-import { useThemeStore } from "@/store/useThemeStore";
+import { alertStore } from "@/stores";
+import { themeStore } from "@/stores/themeStore";
+import Button from "./button/Button";
 
 const Alert = () => {
-  const { theme } = useThemeStore();
+  const { theme } = themeStore();
   const { isVisible, type, title, message, onConfirm, onCancel, hideAlert } =
-    useAlertStore();
+    alertStore();
 
   const handleConfirm = () => {
     if (onConfirm) onConfirm();
@@ -23,24 +24,29 @@ const Alert = () => {
   return (
     <Modal transparent visible={isVisible} animationType="fade">
       <View style={styles.overlay}>
-        <View style={[styles.alertBox, { backgroundColor: theme.buttonColor }]}>
-          <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
-          <Text style={[styles.message, { color: theme.text }]}>{message}</Text>
+        <View style={[styles.alertBox, { backgroundColor: theme.surface }]}>
+          <Text style={[styles.title, { color: theme.onSurface }]}>
+            {title}
+          </Text>
+          <Text style={[styles.message, { color: theme.onSurface }]}>
+            {message}
+          </Text>
 
           <View style={styles.buttonContainer}>
-            <Pressable
-              style={[styles.button, styles.confirmButton]}
+            <Button
               onPress={handleConfirm}
-            >
-              <Text style={styles.buttonText}>OK</Text>
-            </Pressable>
+              backgroundColor={theme.primary}
+              textColor={theme.onPrimary}
+              title="Yes"
+            />
+
             {type === "confirmation" && (
-              <Pressable
-                style={[styles.button, styles.cancelButton]}
+              <Button
                 onPress={handleCancel}
-              >
-                <Text style={styles.buttonText}>Cancel</Text>
-              </Pressable>
+                backgroundColor={theme.error}
+                textColor={theme.onError}
+                title="No"
+              />
             )}
           </View>
         </View>
@@ -52,7 +58,7 @@ const Alert = () => {
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: "rgba(0,0,0,0.9)",
     justifyContent: "center",
     alignItems: "center",
   },
@@ -70,10 +76,12 @@ const styles = StyleSheet.create({
   message: {
     fontSize: 16,
     textAlign: "center",
-    marginBottom: 20,
+    marginBottom: 32,
   },
   buttonContainer: {
+    width: "100%",
     flexDirection: "row",
+    justifyContent: "space-between",
     gap: 10,
   },
   button: {

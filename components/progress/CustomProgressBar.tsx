@@ -1,13 +1,9 @@
 import React, { useEffect } from "react";
-import { View, Text, StyleSheet, Pressable } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons";
-import { useThemeStore } from "@/store/useThemeStore";
-import {
-  useAlertStore,
-  useProgressModalStore,
-  useStudyStore,
-} from "@/store/useStudyStore";
+import { View, Text, StyleSheet } from "react-native";
+import { themeStore } from "@/stores/themeStore";
+import { studyStore } from "@/stores";
 import TargetModal from "./TargetModal";
+import ProgressButtons from "./ProgressButtons";
 
 interface ProgressData {
   type: "daily" | "weekly" | "monthly" | string;
@@ -21,19 +17,10 @@ interface ProgressBoxesProps {
 }
 
 const ProgressBoxes = ({ progressData }: ProgressBoxesProps) => {
-  const { theme } = useThemeStore();
+  const { theme } = themeStore();
   const styles = React.useMemo(() => getStyles(theme), [theme]);
-  const { toggleProgressModal } = useProgressModalStore();
-  const { showAlert } = useAlertStore();
-  const {
-    dailyStudyTime,
-    weeklyStudyTime,
-    monthlyStudyTime,
-    fetchStudyTimes,
-    resetDailyStudyTime,
-    resetMonthlyStudyTime,
-    resetWeeklyStudyTime,
-  } = useStudyStore();
+  const { dailyStudyTime, weeklyStudyTime, monthlyStudyTime, fetchStudyTimes } =
+    studyStore();
 
   useEffect(() => {
     fetchStudyTimes();
@@ -50,31 +37,6 @@ const ProgressBoxes = ({ progressData }: ProgressBoxesProps) => {
       default:
         return 0;
     }
-  };
-
-  const handleReset = (type: string) => {
-    switch (type) {
-      case "daily":
-        resetDailyStudyTime();
-        break;
-      case "weekly":
-        resetWeeklyStudyTime();
-        break;
-      case "monthly":
-        resetMonthlyStudyTime();
-        break;
-      default:
-        break;
-    }
-  };
-
-  const handleResetConfirmation = (type: string) => {
-    showAlert({
-      type: "confirmation",
-      title: "Reset Progress",
-      message: `Are you sure you want to reset your ${type} progress?`,
-      onConfirm: () => handleReset(type),
-    });
   };
 
   const formatTime = (timeInSeconds: number) => {
@@ -107,36 +69,9 @@ const ProgressBoxes = ({ progressData }: ProgressBoxesProps) => {
             </View>
             <Text style={styles.progressText}>{item.progress.toFixed(0)}%</Text>
           </View>
-
-          <View style={styles.buttonContainer}>
-            <Pressable
-              style={styles.button}
-              onPress={() => toggleProgressModal(item.type)}
-            >
-              <MaterialIcons
-                name="ads-click"
-                size={24}
-                color={theme.primaryText}
-              />
-              <Text style={styles.buttonText}>Target</Text>
-            </Pressable>
-            <Pressable
-              style={[
-                styles.button,
-                { backgroundColor: theme.secondaryButton },
-              ]}
-              onPress={() => handleResetConfirmation(item.type)}
-            >
-              <MaterialIcons
-                name="replay"
-                size={24}
-                color={theme.primaryText}
-              />
-              <Text style={styles.buttonText}>Reset</Text>
-            </Pressable>
-          </View>
         </View>
       ))}
+      <ProgressButtons />
       <TargetModal />
     </>
   );
@@ -146,23 +81,25 @@ const getStyles = (theme: any) =>
   StyleSheet.create({
     container: {
       gap: 20,
-      padding: 16,
-      backgroundColor: theme.secondaryColor,
+      paddingVertical: 24,
+      paddingHorizontal: 16,
+      backgroundColor: theme.surfaceContainerHigh,
       borderRadius: 16,
+      width: "100%",
+      maxWidth: 600,
     },
 
     label: {
       fontSize: 18,
       fontWeight: 600,
       marginBottom: 5,
-      color: theme.text,
+      color: theme.onSurface,
       textAlign: "center",
     },
-    progressBox: { gap: 8 },
+    progressBox: { gap: 16 },
     progressBarContainer: {
       width: "100%",
       flexDirection: "row",
-      gap: 8,
     },
     progressBarBackground: {
       height: 30,
@@ -173,7 +110,7 @@ const getStyles = (theme: any) =>
     },
     progressBarFill: {
       height: "100%",
-      backgroundColor: "red",
+      backgroundColor: "#06d474",
       borderRadius: 15,
     },
     progressText: {
@@ -183,32 +120,21 @@ const getStyles = (theme: any) =>
       marginTop: 5,
       fontSize: 18,
       fontWeight: 600,
-      color: theme.text,
     },
     targetText: {
       fontSize: 16,
       fontWeight: 600,
-      color: theme.text,
+      color: theme.onSurface,
     },
     buttonContainer: {
+      width: "100%",
+      maxWidth: 600,
       flexDirection: "row",
       justifyContent: "space-between",
+      marginTop: 16,
     },
-    button: {
-      flexDirection: "row",
-      alignItems: "center",
+    buttonContainerCentered: {
       justifyContent: "center",
-      gap: 4,
-      backgroundColor: theme.primaryColor,
-      borderRadius: 10,
-      paddingVertical: 8,
-      paddingHorizontal: 16,
-    },
-    buttonText: {
-      color: theme.text,
-      fontSize: 16,
-      fontWeight: "bold",
-      marginLeft: 4,
     },
   });
 

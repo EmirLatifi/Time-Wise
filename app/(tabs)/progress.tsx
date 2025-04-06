@@ -1,32 +1,28 @@
-import { View, Text, StyleSheet, Pressable, ScrollView } from "react-native";
+import { View, StyleSheet, ScrollView } from "react-native";
 import React, { useEffect } from "react";
-import { useThemeStore } from "@/store/useThemeStore";
+import { themeStore } from "@/stores/themeStore";
 import CustomProgressBar from "@/components/progress/CustomProgressBar";
-import {
-  useProgressModalStore,
-  useProgressStore,
-  useTargetStore,
-} from "@/store/useStudyStore";
+import { initializeTargets, progressStore, targetStore } from "@/stores";
+import { resetProgressIfNeeded } from "@/services/resetProgress";
 import {
   calculateDailyProgress,
-  calculateWeeklyProgress,
   calculateMonthlyProgress,
-  resetProgressIfNeeded,
-} from "@/utils/studyUtils";
+  calculateWeeklyProgress,
+} from "@/utils/progressCalculators";
 
 const progress = () => {
-  const { theme } = useThemeStore();
+  const { theme } = themeStore();
   const styles = React.useMemo(() => getStyles(theme), [theme]);
-  const { progress, setProgress } = useProgressStore();
-  const { dailyTarget, weeklyTarget, monthlyTarget } = useTargetStore();
+  const { progress, setProgress } = progressStore();
+  const { dailyTarget, weeklyTarget, monthlyTarget } = targetStore();
 
   useEffect(() => {
     resetProgressIfNeeded();
+    initializeTargets();
   }, []);
 
   useEffect(() => {
     const loadProgress = async () => {
-      console.log("Break effect triggered");
       try {
         // Calculate progress for each period
         const dailyProgress = await calculateDailyProgress(dailyTarget);
@@ -85,8 +81,9 @@ const getStyles = (theme: any) =>
     },
     container: {
       flex: 1,
-      backgroundColor: theme.background,
-      padding: 16,
+      backgroundColor: theme.surface,
+      paddingHorizontal: 16,
+      paddingVertical: 32,
       gap: 24,
     },
   });

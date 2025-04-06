@@ -4,13 +4,13 @@
  */
 
 import { Colors } from "@/constants/Colors";
-import { useThemeStore } from "@/store/useThemeStore";
+import { themeStore } from "@/stores/themeStore";
 
 export function useThemeColor(
   props: { light?: string; dark?: string },
   colorName: keyof typeof Colors.light & keyof typeof Colors.dark
 ) {
-  const { colorScheme } = useThemeStore();
+  const { colorScheme } = themeStore();
   const theme = colorScheme ?? "light";
   const colorFromProps = props[theme];
 

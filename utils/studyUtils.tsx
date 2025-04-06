@@ -1,36 +1,36 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import moment from "moment-timezone";
 
-// Funksioni për të marrë numrin e javës
+// Funksioni per me marr nr e javes
 const getWeekNumber = (date: any) => {
   return moment(date).isoWeek();
 };
 
-// Funksioni për të rivendosur progresin
+// Funksioni per me resetu progresin
 export const resetProgressIfNeeded = async () => {
   try {
-    const timezone = moment.tz.guess(); // Merr zonën kohore të përdoruesit
-    const now = moment().tz(timezone); // Koha aktuale në zonën kohore të përdoruesit
+    const timezone = moment.tz.guess(); // Merr zonen kohore t userit
+    const now = moment().tz(timezone); // Koha aktuale n zonen kohore t userit
 
-    // Merr të dhënat e fundit të rivendosjes
+    // Merr t dhenat e fundit t kohes t resetimit
     const lastResetDate = await AsyncStorage.getItem("lastResetDate");
     const lastResetWeek = await AsyncStorage.getItem("lastResetWeek");
     const lastResetMonth = await AsyncStorage.getItem("lastResetMonth");
 
-    // Rivendos progresin ditor nëse është fillimi i një dite të re
+    // reseto progresin ditor nese eshte fillimi i dites t re
     if (!lastResetDate || !moment(lastResetDate).isSame(now, "day")) {
       await AsyncStorage.setItem("dailyStudyTime", "0");
       await AsyncStorage.setItem("lastResetDate", now.format("YYYY-MM-DD"));
     }
 
-    // Rivendos progresin javor nëse është fillimi i një jave të re
+    // reseto progresin javor nese eshte fillimi i javes se re
     const currentWeek = getWeekNumber(now);
     if (!lastResetWeek || lastResetWeek !== currentWeek.toString()) {
       await AsyncStorage.setItem("weeklyStudyTime", "0");
       await AsyncStorage.setItem("lastResetWeek", currentWeek.toString());
     }
 
-    // Rivendos progresin mujor nëse është fillimi i një muaji të ri
+    // reseto progresin mujor nese eshte fillimi i muajit t ri
     const currentMonth = now.format("YYYY-MM");
     if (!lastResetMonth || lastResetMonth !== currentMonth) {
       await AsyncStorage.setItem("monthlyStudyTime", "0");
@@ -41,7 +41,7 @@ export const resetProgressIfNeeded = async () => {
   }
 };
 
-// Funksioni për të ruajtur kohën e studimit
+// Funksioni per me ruajt kohen e studimit
 export const saveStudyTime = async (newTime: number) => {
   try {
     if (newTime < 0) throw new Error("Invalid time value");
@@ -67,7 +67,6 @@ export const saveStudyTime = async (newTime: number) => {
   }
 };
 
-// Funksioni për të marrë kohën e studimit
 export const getStudyTime = async (type: any) => {
   try {
     const studyTime = await AsyncStorage.getItem(`${type}StudyTime`);
@@ -79,31 +78,32 @@ export const getStudyTime = async (type: any) => {
 };
 
 // Calculate progress based on stored time
-export const calculateDailyProgress = async (target: number) => {
-  const storedTime = parseInt(
+export const calculateDailyProgress = async (targetHours: number) => {
+  const storedTimeSeconds = parseInt(
     (await AsyncStorage.getItem("dailyStudyTime")) || "0",
     10
   );
 
-  const dailyGoal = target * 60 * 60; // Convert hours to seconds
-  return Math.min(storedTime / dailyGoal, 1);
+  const storedTimeHours = storedTimeSeconds / (60 * 60);
+  return Math.min(storedTimeHours / targetHours, 1);
 };
 
-export const calculateWeeklyProgress = async (target: number) => {
-  const storedTime = parseInt(
+export const calculateWeeklyProgress = async (targetHours: number) => {
+  const storedTimeSeconds = parseInt(
     (await AsyncStorage.getItem("weeklyStudyTime")) || "0",
     10
   );
-  const weekGoal = target * 60 * 60 * 7; // Convert hours to seconds for 7 days
-  return Math.min(storedTime / weekGoal, 1);
+
+  const storedTimeHours = storedTimeSeconds / (60 * 60);
+  return Math.min(storedTimeHours / targetHours, 1);
 };
 
-export const calculateMonthlyProgress = async (target: number) => {
-  const storedTime = parseInt(
+export const calculateMonthlyProgress = async (targetHours: number) => {
+  const storedTimeSeconds = parseInt(
     (await AsyncStorage.getItem("monthlyStudyTime")) || "0",
     10
   );
-  const daysInMonth = moment().daysInMonth();
-  const monthGoal = target * 60 * 60 * daysInMonth;
-  return Math.min(storedTime / monthGoal, 1);
+
+  const storedTimeHours = storedTimeSeconds / (60 * 60);
+  return Math.min(storedTimeHours / targetHours, 1);
 };

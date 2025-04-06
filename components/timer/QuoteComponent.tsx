@@ -1,29 +1,37 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { quotes } from "@/data/quotes";
-import { useThemeStore } from "@/store/useThemeStore";
+import { themeStore } from "@/stores/themeStore";
 
 const { width, height } = Dimensions.get("window");
 
 const QuoteComponent = () => {
-  const { theme } = useThemeStore();
+  const { theme } = themeStore();
+  const [prevQuoteIndex, setPrevQuoteIndex] = useState<number | null>(null);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
+  const styles = useMemo(() => getStyles(theme), [theme]);
 
   const handleNext = () => {
     const randomIndex = Math.floor(Math.random() * quotes.length);
+    setPrevQuoteIndex(currentQuoteIndex);
     setCurrentQuoteIndex(randomIndex);
   };
 
-  const styles = getStyles(theme);
+  const handlePrevious = () => {
+    if (prevQuoteIndex !== null) {
+      setCurrentQuoteIndex(prevQuoteIndex);
+      setPrevQuoteIndex(null);
+    }
+  };
 
   const renderCard = (index: any) => {
     const { quote, author } = quotes[index];
 
     return (
-      <View key={index} style={[styles.inner]}>
-        <Pressable style={styles.box} onPressIn={handleNext}>
-          <View style={styles.triangle} />
+      <View style={styles.box}>
+        <View style={styles.triangle} />
+        <View style={styles.quoteContainer}>
           <Icon
             name="quote-left"
             size={styles.startQuote.fontSize}
@@ -31,8 +39,17 @@ const QuoteComponent = () => {
             style={styles.startQuote}
           />
           <Text style={styles.quote}>{quote}</Text>
-          <Text style={styles.credit}>⸛ {author}</Text>
-        </Pressable>
+          <Text style={styles.credit}>- {author}</Text>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Pressable style={[styles.navButton]} onPress={handlePrevious}>
+            <Icon name="chevron-left" size={24} color={theme.onSurface} />
+          </Pressable>
+          <Pressable style={styles.navButton} onPress={handleNext}>
+            <Icon name="chevron-right" size={24} color={theme.onSurface} />
+          </Pressable>
+        </View>
       </View>
     );
   };
@@ -46,30 +63,23 @@ const getStyles = (theme: any) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-    },
-    inner: {
-      position: "absolute",
-      width: "100%",
-      height: "100%",
-      justifyContent: "center",
-      alignItems: "center",
+      maxWidth: 600,
     },
 
     box: {
       width: "100%",
-      aspectRatio: 16 / 9,
-      maxHeight: height * 0.4,
+      minHeight: height * 0.3,
       backgroundColor: theme.surfaceContainer,
-      borderRadius: 5,
+      borderRadius: 8,
       overflow: "hidden",
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.5,
-      shadowRadius: 1.5,
+      shadowOpacity: 0.2,
+      shadowRadius: 4,
       elevation: 3,
-      justifyContent: "center",
+      justifyContent: "space-between",
       alignItems: "center",
-      paddingHorizontal: "5%",
+      paddingVertical: 16,
     },
     triangle: {
       position: "absolute",
@@ -86,32 +96,46 @@ const getStyles = (theme: any) =>
       shadowRadius: 1.5,
       elevation: 3,
     },
-    quote: {
+    quoteContainer: {
       width: "100%",
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      paddingTop: 60,
+      paddingHorizontal: 20,
+    },
+    quote: {
       color: theme.onSurface,
       textAlign: "center",
       fontSize: Math.min(width * 0.045, 18),
       fontFamily: "DancingScript-Regular",
+      marginBottom: 20,
     },
     credit: {
-      position: "absolute",
-      bottom: "10%",
-      right: "5%",
       fontSize: Math.min(width * 0.035, 14),
       color: theme.onSurface,
       fontFamily: "JosefinSans-SemiBold",
+      alignSelf: "flex-end",
     },
     startQuote: {
       position: "absolute",
-      top: "10%",
-      left: "4%",
+      top: 0,
+      left: 20,
       color: theme.inverseSurface,
       fontSize: Math.min(width * 0.085, 35),
     },
-    button: {
-      position: "absolute",
-      bottom: 0,
+    buttonContainer: {
+      flexDirection: "row",
+      justifyContent: "center",
+      gap: 20,
+      marginTop: 20,
+    },
+    navButton: {
       padding: 8,
+    },
+    disabledButton: {
+      opacity: 0.5,
     },
   });
 

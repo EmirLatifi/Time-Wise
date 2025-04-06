@@ -1,9 +1,9 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { StyleSheet, Switch, View } from "react-native";
-import { useThemeStore } from "@/store/useThemeStore";
+import { themeStore } from "@/stores/themeStore";
 
 export function ThemeToggle() {
-  const { colorScheme, setColorScheme } = useThemeStore();
+  const { colorScheme, setColorScheme, theme } = themeStore();
 
   const toggleTheme = () => {
     setColorScheme(colorScheme === "dark" ? "light" : "dark");
@@ -11,17 +11,11 @@ export function ThemeToggle() {
 
   return (
     <Switch
-      trackColor={{ false: "white", true: "black" }}
+      trackColor={{ false: theme.secondary, true: theme.secondary }}
       ios_backgroundColor="black"
       onValueChange={toggleTheme}
       value={colorScheme === "dark"}
-      thumbColor={colorScheme === "light" ? "white" : "black"}
+      thumbColor={colorScheme === "light" ? "rgb(30, 101, 134)" : "black"}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  switchContainer: {
-    zIndex: 10000,
-  },
-});
