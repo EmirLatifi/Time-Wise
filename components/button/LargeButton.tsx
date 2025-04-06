@@ -14,25 +14,29 @@ interface ButtonProps {
   backgroundColor?: string;
   textColor?: string;
   disabled?: boolean;
+  borderWidth?: number;
+  borderColor?: string;
 }
 
-const Button: React.FC<ButtonProps> = ({
+const LargeButton: React.FC<ButtonProps> = ({
   title,
   onPress,
   icon,
   backgroundColor = "#6200EE",
   textColor = "white",
   disabled,
+  borderColor,
+  borderWidth,
 }) => {
   const { width } = useWindowDimensions();
   const styles = useMemo(
-    () => getStyles(width, backgroundColor, textColor),
-    [width, backgroundColor, textColor]
+    () => getStyles(width, borderWidth, borderColor),
+    [width, borderWidth, borderColor]
   );
 
   return (
     <TouchableOpacity
-      style={styles.button}
+      style={[styles.button, { backgroundColor }]}
       onPress={onPress}
       disabled={disabled}
     >
@@ -44,26 +48,23 @@ const Button: React.FC<ButtonProps> = ({
           style={styles.icon}
         />
       )}
-      <Text style={styles.text}>{title}</Text>
+      <Text style={[styles.text, { color: textColor }]}>{title}</Text>
     </TouchableOpacity>
   );
 };
 
-const getStyles = (
-  screenWidth: number,
-  backgroundColor: any,
-  textColor: any
-) => {
+const getStyles = (screenWidth: number, borderWidth: any, borderColor: any) => {
   return StyleSheet.create({
     button: {
       flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
       height: 40,
-      backgroundColor: backgroundColor,
       paddingHorizontal: screenWidth > 600 ? 20 : 16,
       borderRadius: 20,
-      minWidth: 100, // Ensure a minimum width
+      borderWidth: borderWidth ?? 0,
+      borderColor: borderColor ?? "transparent",
+      minWidth: "100%",
       maxWidth: 200,
       shadowColor: "black",
       shadowOffset: {
@@ -79,7 +80,6 @@ const getStyles = (
       fontSize: 14,
       textAlign: "center",
       lineHeight: 20,
-      color: textColor,
     },
     icon: {
       marginRight: 6,
@@ -87,4 +87,4 @@ const getStyles = (
   });
 };
 
-export default Button;
+export default LargeButton;

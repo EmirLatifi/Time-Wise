@@ -1,12 +1,12 @@
 import React, { useMemo, useCallback } from "react";
 import { View, Text, StyleSheet } from "react-native";
-import { useThemeStore } from "@/store/useThemeStore";
-import { useStudyTimerStore } from "@/store/useStudyStore";
+import { themeStore } from "@/stores/themeStore";
+import { studyTimerStore } from "@/stores";
 import { LinearGradient } from "expo-linear-gradient";
 
 const TimerDisplay = () => {
-  const { time } = useStudyTimerStore();
-  const { theme } = useThemeStore();
+  const { time } = studyTimerStore();
+  const { theme } = themeStore();
 
   const formatTime = useCallback((time: number) => {
     const hours = Math.floor(time / 3600);
@@ -56,7 +56,7 @@ export default TimerDisplay;
 
 const getStyles = (theme: any) =>
   StyleSheet.create({
-    container: { paddingVertical: 24 },
+    container: { paddingVertical: 24, maxWidth: 600 },
 
     timerContainer: {
       flexDirection: "row",

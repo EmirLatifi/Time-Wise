@@ -11,7 +11,7 @@ interface ThemeState {
   setColorScheme: (scheme: ColorScheme) => void;
 }
 
-export const useThemeStore = create<ThemeState>()(
+export const themeStore = create<ThemeState>()(
   persist(
     (set) => ({
       colorScheme: Appearance.getColorScheme(),

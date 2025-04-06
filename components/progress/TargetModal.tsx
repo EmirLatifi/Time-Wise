@@ -8,29 +8,18 @@ import {
 } from "react-native";
 import React, { useRef, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
-import { useThemeStore } from "@/store/useThemeStore";
-import {
-  useErrorStore,
-  useProgressModalStore,
-  useStudyConfigStore,
-  useTargetStore,
-} from "@/store/useStudyStore";
+import { themeStore } from "@/stores/themeStore";
+import { progressModalStore, studyConfigStore, targetStore } from "@/stores";
+import Button from "../button/Button";
 
 const TargetModal = () => {
   const { toggleProgressModal, isModalVisible, targetType } =
-    useProgressModalStore();
-  const {
-    dailyTarget,
-    weeklyTarget,
-    monthlyTarget,
-    setDailyTarget,
-    setWeeklyTarget,
-    setMonthlyTarget,
-  } = useTargetStore();
-  const { errors, setErrors } = useErrorStore();
+    progressModalStore();
+  const { dailyTarget, weeklyTarget, monthlyTarget, setDailyTarget } =
+    targetStore();
 
   const viewRef = useRef<Animatable.View>(null);
-  const { theme } = useThemeStore();
+  const { theme } = themeStore();
   const styles = React.useMemo(() => getStyles(theme), [theme]);
 
   const targetRef = useRef("");
@@ -55,74 +44,20 @@ const TargetModal = () => {
   const handleTargetChange = (value: string) => {
     if (!/^\d*$/.test(value)) return; // Only allow numbers
     targetRef.current = value;
-    // Clear any existing errors
-    setErrors({ ...errors, targetError: false });
-  };
-
-  const getErrorMessage = () => {
-    switch (targetType) {
-      case "daily":
-        return "Daily target cannot be greater than weekly target";
-      case "weekly":
-        return "Weekly target must be between daily and monthly targets";
-      case "monthly":
-        return "Monthly target cannot be less than weekly target";
-      default:
-        return "";
-    }
   };
 
   const handleClose = async () => {
     if (viewRef.current) {
       await viewRef.current?.animate("fadeOutLeft", 300);
-      setErrors({
-        targetError: false,
-      });
       toggleProgressModal();
     }
   };
 
   const saveTarget = () => {
     const numValue = parseInt(targetRef.current) || 0;
-    let isValid = true;
+    setDailyTarget(numValue);
 
-    switch (targetType) {
-      case "daily":
-        if (numValue > weeklyTarget) {
-          isValid = false;
-        }
-        break;
-      case "weekly":
-        if (numValue < dailyTarget || numValue > monthlyTarget) {
-          isValid = false;
-        }
-        break;
-      case "monthly":
-        if (numValue < weeklyTarget) {
-          isValid = false;
-        }
-        break;
-    }
-
-    if (!isValid) {
-      setErrors({ ...errors, targetError: true });
-      return;
-    }
-
-    // Set the appropriate target
-    switch (targetType) {
-      case "daily":
-        setDailyTarget(numValue);
-        break;
-      case "weekly":
-        setWeeklyTarget(numValue);
-        break;
-      case "monthly":
-        setMonthlyTarget(numValue);
-        break;
-    }
-
-    useStudyConfigStore.setState({ isConfigured: true });
+    studyConfigStore.setState({ isConfigured: true });
     toggleProgressModal();
   };
 
@@ -141,33 +76,32 @@ const TargetModal = () => {
       >
         <View style={styles.modalView}>
           <View style={styles.targetModalInputDiv}>
-            <Text style={styles.targetModalInputText}>
-              Set {targetType} target
-            </Text>
+            <Text style={styles.targetModalInputText}>Set daily target</Text>
             <View>
               <TextInput
-                style={[
-                  styles.targetModalInput,
-                  errors.targetError && { borderColor: "red" },
-                ]}
+                style={styles.targetModalInput}
                 keyboardType="numeric"
                 defaultValue={targetRef.current}
                 onChangeText={handleTargetChange}
-                maxLength={2}
+                maxLength={3}
               />
-              {errors.targetError && (
-                <Text style={styles.errorText}>{getErrorMessage()}</Text>
-              )}
             </View>
           </View>
 
           <View style={styles.buttonsDiv}>
-            <Pressable style={styles.button} onPress={saveTarget}>
-              <Text style={styles.buttonText}>Add target</Text>
-            </Pressable>
-            <Pressable style={styles.button} onPress={handleClose}>
-              <Text style={styles.buttonText}>Close</Text>
-            </Pressable>
+            <Button
+              onPress={saveTarget}
+              backgroundColor={theme.primary}
+              textColor={theme.onPrimary}
+              title="Add"
+            />
+
+            <Button
+              onPress={handleClose}
+              backgroundColor={theme.secondary}
+              textColor={theme.onSecondary}
+              title="Close"
+            />
           </View>
         </View>
       </Animatable.View>
@@ -181,14 +115,15 @@ const getStyles = (theme: any) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      backgroundColor: "rgba(0,0,0,0.6)",
-      paddingHorizontal: 32,
+      backgroundColor: "rgba(0,0,0,0.9)",
+      paddingHorizontal: 16,
     },
     modalView: {
       width: "100%",
-      backgroundColor: theme.buttonColor,
+      backgroundColor: theme.surface,
       borderRadius: 20,
-      padding: 32,
+      paddingVertical: 32,
+      paddingHorizontal: 32,
       gap: 24,
       shadowColor: "#000",
       shadowOffset: {
@@ -205,16 +140,18 @@ const getStyles = (theme: any) =>
     targetModalInputText: {
       fontSize: 18,
       fontWeight: "600",
-      color: theme.text,
+      color: theme.onSurface,
     },
     targetModalInput: {
       padding: 8,
       fontSize: 16,
-      borderRadius: 4,
       backgroundColor: "white",
+      borderRadius: 5,
+      borderWidth: 1,
+      borderColor: theme.outline,
     },
     errorText: {
-      color: "red",
+      color: theme.error,
       fontSize: 14,
       marginTop: 10,
     },
@@ -222,17 +159,6 @@ const getStyles = (theme: any) =>
       width: "100%",
       flexDirection: "row",
       justifyContent: "space-between",
-    },
-    button: {
-      minWidth: 80,
-      borderRadius: 8,
-      paddingVertical: 8,
-      paddingHorizontal: 8,
-      backgroundColor: theme.tint,
-    },
-    buttonText: {
-      textAlign: "center",
-      color: theme.text,
     },
   });
 
