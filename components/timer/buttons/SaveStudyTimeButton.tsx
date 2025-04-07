@@ -68,17 +68,15 @@ const SaveStudyTimeButton = () => {
   };
 
   return (
-    <View style={styles.saveButtonContainer}>
-      <LargeButton
-        onPress={handleSaveTime}
-        disabled={isButtonDisabled}
-        backgroundColor={
-          isButtonDisabled ? theme.surfaceContainerHigh : theme.primary
-        }
-        textColor={isButtonDisabled ? theme.onSurface : theme.onPrimary}
-        title="Save Time"
-      />
-    </View>
+    <LargeButton
+      onPress={handleSaveTime}
+      disabled={isButtonDisabled}
+      backgroundColor={
+        isButtonDisabled ? theme.surfaceContainerHigh : theme.primary
+      }
+      textColor={isButtonDisabled ? theme.onSurface : theme.onPrimary}
+      title="Save Time"
+    />
   );
 };
 
