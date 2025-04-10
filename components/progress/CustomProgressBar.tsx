@@ -3,7 +3,8 @@ import { View, Text, StyleSheet } from "react-native";
 import { themeStore } from "@/stores/themeStore";
 import { studyStore } from "@/stores";
 import TargetModal from "./TargetModal";
-import ProgressButtons from "./ProgressButtons";
+import TargetButton from "././TargetButton";
+import { Typography } from "@/constants/Typography";
 
 interface ProgressData {
   type: "daily" | "weekly" | "monthly" | string;
@@ -51,7 +52,7 @@ const ProgressBoxes = ({ progressData }: ProgressBoxesProps) => {
         <View key={item.type} style={styles.container}>
           <View style={styles.progressBox}>
             <Text style={styles.label}>{item.label}</Text>
-            <View>
+            <View style={styles.textContainer}>
               <Text style={styles.targetText}>
                 {`${item.label} target is: ${item.target}h`}
               </Text>
@@ -71,7 +72,7 @@ const ProgressBoxes = ({ progressData }: ProgressBoxesProps) => {
           </View>
         </View>
       ))}
-      <ProgressButtons />
+      <TargetButton />
       <TargetModal />
     </>
   );
@@ -86,15 +87,15 @@ const getStyles = (theme: any) =>
       backgroundColor: theme.surfaceContainerHigh,
       borderRadius: 16,
       width: "100%",
-      maxWidth: 600,
+      // maxWidth: 600,
     },
 
     label: {
       fontSize: 18,
-      fontWeight: 600,
       marginBottom: 5,
       color: theme.onSurface,
       textAlign: "center",
+      fontFamily: Typography.fontFamily.title,
     },
     progressBox: { gap: 16 },
     progressBarContainer: {
@@ -115,20 +116,23 @@ const getStyles = (theme: any) =>
     },
     progressText: {
       position: "absolute",
-      top: -3,
+      top: 3,
       right: 10,
-      marginTop: 5,
       fontSize: 18,
-      fontWeight: 600,
+      fontFamily: Typography.fontFamily.button,
+    },
+    textContainer: {
+      gap: 8,
     },
     targetText: {
       fontSize: 16,
-      fontWeight: 600,
       color: theme.onSurface,
+      fontFamily: Typography.fontFamily.button,
+      letterSpacing: 0.3,
     },
     buttonContainer: {
       width: "100%",
-      maxWidth: 600,
+      //maxWidth: 600,
       flexDirection: "row",
       justifyContent: "space-between",
       marginTop: 16,

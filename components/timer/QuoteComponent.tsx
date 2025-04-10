@@ -1,8 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { View, Text, StyleSheet, Dimensions, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { quotes } from "@/data/quotes";
 import { themeStore } from "@/stores/themeStore";
+import { loadingStore } from "@/stores/loadingStore";
+import { Typography } from "@/constants/Typography";
 
 const { width, height } = Dimensions.get("window");
 
@@ -11,6 +13,14 @@ const QuoteComponent = () => {
   const [prevQuoteIndex, setPrevQuoteIndex] = useState<number | null>(null);
   const [currentQuoteIndex, setCurrentQuoteIndex] = useState(0);
   const styles = useMemo(() => getStyles(theme), [theme]);
+
+  useEffect(() => {
+    // Show loader while quotes are being prepared
+    loadingStore.setState({ isLoading: true, text: "Loading quotes..." });
+
+    // Hide loader immediately after quotes are ready
+    loadingStore.setState({ isLoading: false });
+  }, []);
 
   const handleNext = () => {
     const randomIndex = Math.floor(Math.random() * quotes.length);
@@ -63,12 +73,13 @@ const getStyles = (theme: any) =>
       flex: 1,
       justifyContent: "center",
       alignItems: "center",
-      maxWidth: 600,
+      paddingVertical: 16,
+      // maxWidth: 600,
     },
 
     box: {
       width: "100%",
-      minHeight: height * 0.3,
+      height: 250,
       backgroundColor: theme.surfaceContainer,
       borderRadius: 8,
       overflow: "hidden",
@@ -109,13 +120,14 @@ const getStyles = (theme: any) =>
       color: theme.onSurface,
       textAlign: "center",
       fontSize: Math.min(width * 0.045, 18),
-      fontFamily: "DancingScript-Regular",
       marginBottom: 20,
+      fontFamily: Typography.fontFamily.quoteCredit,
+      letterSpacing: 0.1,
     },
     credit: {
-      fontSize: Math.min(width * 0.035, 14),
+      fontSize: Math.min(width * 0.035, 16),
       color: theme.onSurface,
-      fontFamily: "JosefinSans-SemiBold",
+      fontFamily: Typography.fontFamily.quoteCredit,
       alignSelf: "flex-end",
     },
     startQuote: {

@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { Typography } from "@/constants/Typography";
 
 export const getStyles = (theme: any) =>
   StyleSheet.create({
@@ -9,10 +10,9 @@ export const getStyles = (theme: any) =>
     },
     buttonsContainer: {
       width: "100%",
-      maxWidth: 600,
       flexDirection: "row",
       justifyContent: "space-between",
-      marginTop: 16,
+      alignItems: "center",
       gap: 8,
     },
     saveButtonContainer: {

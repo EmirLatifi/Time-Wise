@@ -31,8 +31,8 @@ export const useStudyTimer = () => {
       const shouldBreak =
         elapsedMinutes > 0 &&
         isExactMinute &&
-        elapsedMinutes % studySettings.breakInterval === 0 &&
-        breakCount < studySettings.breakFrequency;
+        elapsedMinutes % studySettings.timeBetweenBreaks === 0 &&
+        breakCount < studySettings.numberOfBreaks;
 
       if (shouldBreak && !isBreakTime) {
         playBreakSound();

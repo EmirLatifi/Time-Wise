@@ -4,7 +4,7 @@ import { themeStore } from "@/stores/themeStore";
 import { progressModalStore } from "@/stores";
 import LargeButton from "../button/LargeButton";
 
-const ProgressButtons = () => {
+const TargetButton = () => {
   const { theme } = themeStore();
   const { toggleProgressModal } = progressModalStore();
 
@@ -27,8 +27,7 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     flexDirection: "row",
     justifyContent: "center",
-    marginTop: 16,
   },
 });
 
-export default ProgressButtons;
+export default TargetButton;

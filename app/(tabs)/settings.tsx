@@ -18,7 +18,6 @@ const getStyles = (theme: any) =>
     container: {
       flex: 1,
       width: "100%",
-      maxWidth: 600,
       backgroundColor: theme.surface,
     },
   });

@@ -17,7 +17,7 @@ const RestartButton: React.FC<ControlButtonsProps> = ({ handleRestart }) => {
     <Button
       onPress={() => handleRestart("time")}
       disabled={isButtonDisabled}
-      title={"Restart"}
+      title={"Reset"}
       icon="replay"
       backgroundColor={
         isButtonDisabled ? theme.surfaceContainerHigh : theme.error
