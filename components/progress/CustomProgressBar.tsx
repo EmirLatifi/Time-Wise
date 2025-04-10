@@ -84,7 +84,7 @@ const getStyles = (theme: any) =>
       gap: 20,
       paddingVertical: 24,
       paddingHorizontal: 16,
-      backgroundColor: theme.surfaceContainerHigh,
+      backgroundColor: theme.surfaceContainerHighest,
       borderRadius: 16,
       width: "100%",
       // maxWidth: 600,

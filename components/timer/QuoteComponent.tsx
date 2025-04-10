@@ -15,10 +15,7 @@ const QuoteComponent = () => {
   const styles = useMemo(() => getStyles(theme), [theme]);
 
   useEffect(() => {
-    // Show loader while quotes are being prepared
-    loadingStore.setState({ isLoading: true, text: "Loading quotes..." });
-
-    // Hide loader immediately after quotes are ready
+    loadingStore.setState({ isLoading: true });
     loadingStore.setState({ isLoading: false });
   }, []);
 
@@ -35,7 +32,19 @@ const QuoteComponent = () => {
     }
   };
 
-  const renderCard = (index: any) => {
+  const appearQuote = () => {
+    const randomIndex = Math.floor(Math.random() * quotes.length);
+    setPrevQuoteIndex(currentQuoteIndex);
+    setCurrentQuoteIndex(randomIndex);
+  };
+
+  useEffect(() => {
+    appearQuote();
+    const intervalId = setInterval(appearQuote, 60000);
+    return () => clearInterval(intervalId);
+  }, []);
+
+  const renderCard = (index: number) => {
     const { quote, author } = quotes[index];
 
     return (
