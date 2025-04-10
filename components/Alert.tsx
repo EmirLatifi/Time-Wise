@@ -3,6 +3,7 @@ import { Modal, View, Text, Pressable, StyleSheet } from "react-native";
 import { alertStore } from "@/stores";
 import { themeStore } from "@/stores/themeStore";
 import Button from "./button/Button";
+import { Typography } from "@/constants/Typography";
 
 const Alert = () => {
   const { theme } = themeStore();
@@ -70,13 +71,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    fontWeight: "bold",
+
     marginBottom: 10,
+    fontFamily: Typography.fontFamily.title,
   },
   message: {
     fontSize: 16,
     textAlign: "center",
     marginBottom: 32,
+    fontFamily: Typography.fontFamily.button,
   },
   buttonContainer: {
     width: "100%",

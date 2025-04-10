@@ -4,6 +4,7 @@ import { Platform, Text } from "react-native";
 import TabBarBackground from "@/components/ui/TabBarBackground";
 import { themeStore } from "@/stores/themeStore";
 import { Ionicons } from "@expo/vector-icons";
+import { Typography } from "@/constants/Typography";
 
 export default function TabLayout() {
   const { theme } = themeStore();
@@ -11,9 +12,11 @@ export default function TabLayout() {
   const renderLabel = (label: string, focused: boolean) => (
     <Text
       style={{
-        color: focused ? theme.onSurface : theme.onSurfaceVariant,
+        color: focused ? theme.primary : theme.onSurfaceVariant,
         fontSize: 12,
-        fontWeight: focused ? "700" : "500",
+        fontFamily: Typography.fontFamily.button,
+        fontWeight: focused ? "600" : "500",
+        letterSpacing: 1,
         marginTop: 4,
       }}
     >
@@ -41,6 +44,8 @@ export default function TabLayout() {
     headerTitleStyle: {
       color: theme.onPrimary,
       fontSize: 20,
+      fontFamily: Typography.fontFamily.header,
+      letterSpacing: 1,
     },
     tabBarLabel: ({ focused }: any) => renderLabel(label, focused),
     tabBarIcon: ({ focused }: any) => renderIcon(focused, icon),

@@ -1,16 +1,10 @@
-import {
-  View,
-  Text,
-  Pressable,
-  TextInput,
-  StyleSheet,
-  Modal,
-} from "react-native";
+import { View, Text, TextInput, StyleSheet, Modal } from "react-native";
 import React, { useRef, useEffect } from "react";
 import * as Animatable from "react-native-animatable";
 import { themeStore } from "@/stores/themeStore";
 import { progressModalStore, studyConfigStore, targetStore } from "@/stores";
 import Button from "../button/Button";
+import { Typography } from "@/constants/Typography";
 
 const TargetModal = () => {
   const { toggleProgressModal, isModalVisible, targetType } =
@@ -139,8 +133,8 @@ const getStyles = (theme: any) =>
     },
     targetModalInputText: {
       fontSize: 18,
-      fontWeight: "600",
       color: theme.onSurface,
+      fontFamily: Typography.fontFamily.label,
     },
     targetModalInput: {
       padding: 8,
@@ -149,6 +143,7 @@ const getStyles = (theme: any) =>
       borderRadius: 5,
       borderWidth: 1,
       borderColor: theme.outline,
+      fontFamily: Typography.fontFamily.button,
     },
     errorText: {
       color: theme.error,

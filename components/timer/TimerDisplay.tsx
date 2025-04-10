@@ -1,8 +1,9 @@
 import React, { useMemo, useCallback } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ViewStyle, TextStyle } from "react-native";
 import { themeStore } from "@/stores/themeStore";
 import { studyTimerStore } from "@/stores";
 import { LinearGradient } from "expo-linear-gradient";
+import { Typography } from "@/constants/Typography";
 
 const TimerDisplay = () => {
   const { time } = studyTimerStore();
@@ -55,8 +56,15 @@ const TimerDisplay = () => {
 export default TimerDisplay;
 
 const getStyles = (theme: any) =>
-  StyleSheet.create({
-    container: { paddingVertical: 24, maxWidth: 600 },
+  StyleSheet.create<{
+    container: ViewStyle;
+    timerContainer: ViewStyle;
+    timerBox: ViewStyle;
+    timerText: TextStyle;
+    timerLabel: TextStyle;
+    startedAtTime: TextStyle;
+  }>({
+    container: { paddingVertical: 24 },
 
     timerContainer: {
       flexDirection: "row",
@@ -74,21 +82,24 @@ const getStyles = (theme: any) =>
     },
 
     timerText: {
-      fontSize: 24,
-      fontWeight: "bold",
+      fontSize: Typography.fontSize["2xl"],
+      fontWeight: "700",
       color: theme.onSurface,
+      fontFamily: Typography.fontFamily.button,
     },
 
     timerLabel: {
-      fontSize: 14,
+      fontSize: Typography.fontSize.sm,
       color: theme.onSurface,
       marginTop: 2,
+      fontFamily: Typography.fontFamily.button,
     },
 
     startedAtTime: {
-      fontSize: 18,
+      fontSize: Typography.fontSize.lg,
       textAlign: "center",
       marginTop: 16,
       color: theme.text,
+      fontFamily: Typography.fontFamily.primary,
     },
   });

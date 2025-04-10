@@ -1,8 +1,8 @@
 import { create } from "zustand";
 
 type StudyConfig = {
-  breakInterval: number;
-  breakFrequency: number;
+  timeBetweenBreaks: number;
+  numberOfBreaks: number;
 };
 
 type StudyConfigState = {
@@ -16,7 +16,7 @@ type StudyConfigState = {
 };
 
 export const studyConfigStore = create<StudyConfigState>((set) => ({
-  studySettings: { breakInterval: 0, breakFrequency: 0 },
+  studySettings: { timeBetweenBreaks: 0, numberOfBreaks: 0 },
   isConfigured: false,
 
   setStudySettings: (settings) => set({ studySettings: settings }),
@@ -24,7 +24,7 @@ export const studyConfigStore = create<StudyConfigState>((set) => ({
 
   reset: () =>
     set({
-      studySettings: { breakInterval: 0, breakFrequency: 0 },
+      studySettings: { timeBetweenBreaks: 0, numberOfBreaks: 0 },
       isConfigured: false,
     }),
 }));

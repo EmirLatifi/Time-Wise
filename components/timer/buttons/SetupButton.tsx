@@ -1,9 +1,9 @@
 import Button from "@/components/button/Button";
-import { useModalStore, studyConfigStore } from "@/stores";
+import { modalStore, studyConfigStore } from "@/stores";
 import { themeStore } from "@/stores/themeStore";
 
 const SetupButton = () => {
-  const toggleModal = useModalStore((state) => state.toggleModal);
+  const toggleModal = modalStore((state) => state.toggleModal);
   const isConfigured = studyConfigStore((state) => state.isConfigured);
   const { theme } = themeStore();
   return (

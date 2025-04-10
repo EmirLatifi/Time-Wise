@@ -6,6 +6,7 @@ import {
   useWindowDimensions,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { Typography } from "@/constants/Typography";
 
 interface ButtonProps {
   title: string;
@@ -63,8 +64,8 @@ const getStyles = (
       backgroundColor: backgroundColor,
       paddingHorizontal: screenWidth > 600 ? 20 : 16,
       borderRadius: 20,
-      minWidth: 100, // Ensure a minimum width
-      maxWidth: 200,
+      minWidth: 100,
+      maxWidth: 300,
       shadowColor: "black",
       shadowOffset: {
         width: 0,
@@ -80,6 +81,7 @@ const getStyles = (
       textAlign: "center",
       lineHeight: 20,
       color: textColor,
+      letterSpacing: 1,
     },
     icon: {
       marginRight: 6,
