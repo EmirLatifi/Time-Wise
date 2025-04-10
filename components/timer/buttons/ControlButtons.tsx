@@ -3,7 +3,7 @@ import React, { memo, useMemo } from "react";
 import { themeStore } from "@/stores/themeStore";
 import SaveStudyTimeButton from "./SaveStudyTimeButton";
 import { getStyles } from "./styles";
-import SetupButton from "./SetupButton";
+import BreaksButton from "./BreaksButton";
 import StartPauseButton from "./StartPauseButton";
 import RestartButton from "./RestartButton";
 
@@ -21,7 +21,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = memo(
     return (
       <View style={styles.container}>
         <View style={styles.buttonsContainer}>
-          <SetupButton />
+          <BreaksButton />
           <StartPauseButton
             handleStart={handleStart}
             handlePause={handlePause}

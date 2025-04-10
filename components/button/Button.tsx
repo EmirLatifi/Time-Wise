@@ -64,7 +64,7 @@ const getStyles = (
       backgroundColor: backgroundColor,
       paddingHorizontal: screenWidth > 600 ? 20 : 16,
       borderRadius: 20,
-      minWidth: 100,
+      width: 100,
       maxWidth: 300,
       shadowColor: "black",
       shadowOffset: {
@@ -79,9 +79,9 @@ const getStyles = (
     text: {
       fontSize: 14,
       textAlign: "center",
-      lineHeight: 20,
       color: textColor,
       letterSpacing: 1,
+      fontFamily: Typography.fontFamily.button,
     },
     icon: {
       marginRight: 6,
