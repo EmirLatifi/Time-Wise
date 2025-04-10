@@ -1,7 +1,7 @@
 import { View } from "react-native";
 import React, { memo, useMemo } from "react";
 import { themeStore } from "@/stores/themeStore";
-import SaveStudyTimeButton from "./SaveStudyTimeButton";
+import SaveTimeButton from "./SaveTimeButton";
 import { getStyles } from "./styles";
 import BreaksButton from "./BreaksButton";
 import StartPauseButton from "./StartPauseButton";
@@ -28,7 +28,7 @@ const ControlButtons: React.FC<ControlButtonsProps> = memo(
           />
           <RestartButton handleRestart={handleRestart} />
         </View>
-        <SaveStudyTimeButton />
+        <SaveTimeButton />
       </View>
     );
   }

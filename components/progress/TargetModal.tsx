@@ -9,9 +9,7 @@ import { Typography } from "@/constants/Typography";
 const TargetModal = () => {
   const { toggleProgressModal, isModalVisible, targetType } =
     progressModalStore();
-  const { dailyTarget, weeklyTarget, monthlyTarget, setDailyTarget } =
-    targetStore();
-
+  const { dailyTarget, setDailyTarget } = targetStore();
   const viewRef = useRef<Animatable.View>(null);
   const { theme } = themeStore();
   const styles = React.useMemo(() => getStyles(theme), [theme]);
@@ -19,30 +17,17 @@ const TargetModal = () => {
   const targetRef = useRef("");
 
   useEffect(() => {
-    targetRef.current = getCurrentTarget().toString();
-  }, [targetType, dailyTarget, weeklyTarget, monthlyTarget]);
-
-  const getCurrentTarget = () => {
-    switch (targetType) {
-      case "daily":
-        return dailyTarget;
-      case "weekly":
-        return weeklyTarget;
-      case "monthly":
-        return monthlyTarget;
-      default:
-        return 0;
-    }
-  };
+    targetRef.current = dailyTarget.toString();
+  }, [dailyTarget]);
 
   const handleTargetChange = (value: string) => {
-    if (!/^\d*$/.test(value)) return; // Only allow numbers
+    if (!/^\d*$/.test(value)) return;
     targetRef.current = value;
   };
 
   const handleClose = async () => {
     if (viewRef.current) {
-      await viewRef.current?.animate("fadeOutLeft", 300);
+      await viewRef.current?.animate("fadeOutDown", 300);
       toggleProgressModal();
     }
   };
@@ -64,7 +49,7 @@ const TargetModal = () => {
     >
       <Animatable.View
         ref={viewRef}
-        animation="fadeInLeft"
+        animation="fadeInUp"
         duration={300}
         style={styles.centeredView}
       >
@@ -145,11 +130,7 @@ const getStyles = (theme: any) =>
       borderColor: theme.outline,
       fontFamily: Typography.fontFamily.button,
     },
-    errorText: {
-      color: theme.error,
-      fontSize: 14,
-      marginTop: 10,
-    },
+
     buttonsDiv: {
       width: "100%",
       flexDirection: "row",

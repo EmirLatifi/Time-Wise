@@ -1,5 +1,5 @@
 export * from "./studyTimerStore";
-export * from "./studyConfigStore";
+export * from "./breaksStore";
 export * from "./progressStore";
 export * from "./targetStore";
 export * from "./studyStore";

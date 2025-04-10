@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import TimerDisplay from "@/components/timer/TimerDisplay";
 import Notification from "@/components/Notification";
 import QuoteComponent from "@/components/timer/QuoteComponent";
-import StudySettingsModal from "@/components/timer/StudySettingsModal";
+import BreaksModal from "@/components/timer/BreaksModal";
 import ControlButtons from "@/components/timer/buttons/ControlButtons";
 import { themeStore } from "@/stores/themeStore";
 import { useStudyTimer } from "@/hooks/useStudyTimer";
@@ -16,7 +16,7 @@ const timer = () => {
   const {
     breakCount,
     isBreakTime,
-    studySettings,
+    breaksSettings,
     handleResumeFromBreak,
     handleStart,
     handlePause,
@@ -29,7 +29,7 @@ const timer = () => {
         visible={isBreakTime}
         type="info"
         title="Time for a Break!"
-        subtitle={`Break ${breakCount} of ${studySettings.numberOfBreaks}`}
+        subtitle={`Break ${breakCount} of ${breaksSettings.numberOfBreaks}`}
         onClose={handleResumeFromBreak}
       />
 
@@ -40,7 +40,7 @@ const timer = () => {
           handlePause={handlePause}
           handleRestart={handleResetConfirmation}
         />
-        <StudySettingsModal />
+        <BreaksModal />
         <QuoteComponent />
         <Loader />
       </View>

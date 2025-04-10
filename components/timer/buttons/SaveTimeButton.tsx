@@ -17,7 +17,7 @@ import {
   targetStore,
 } from "@/stores";
 
-const SaveStudyTimeButton = () => {
+const SaveTimeButton = () => {
   const { theme } = themeStore();
 
   const { isActive, time } = studyTimerStore();
@@ -79,4 +79,4 @@ const SaveStudyTimeButton = () => {
   );
 };
 
-export default SaveStudyTimeButton;
+export default SaveTimeButton;

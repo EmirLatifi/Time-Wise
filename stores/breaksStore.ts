@@ -1,30 +1,30 @@
 import { create } from "zustand";
 
-type StudyConfig = {
+type BreaksConfig = {
   timeBetweenBreaks: number;
   numberOfBreaks: number;
 };
 
 type StudyConfigState = {
-  studySettings: StudyConfig;
+  breaksSettings: BreaksConfig;
   isConfigured: boolean;
 
   // Actions
-  setStudySettings: (settings: StudyConfig) => void;
+  setBreaksSettings: (settings: BreaksConfig) => void;
   setIsConfigured: (isConfigured: boolean) => void;
   reset: () => void;
 };
 
 export const studyConfigStore = create<StudyConfigState>((set) => ({
-  studySettings: { timeBetweenBreaks: 0, numberOfBreaks: 0 },
+  breaksSettings: { timeBetweenBreaks: 0, numberOfBreaks: 0 },
   isConfigured: false,
 
-  setStudySettings: (settings) => set({ studySettings: settings }),
+  setBreaksSettings: (settings) => set({ breaksSettings: settings }),
   setIsConfigured: (isConfigured) => set({ isConfigured }),
 
   reset: () =>
     set({
-      studySettings: { timeBetweenBreaks: 0, numberOfBreaks: 0 },
+      breaksSettings: { timeBetweenBreaks: 0, numberOfBreaks: 0 },
       isConfigured: false,
     }),
 }));

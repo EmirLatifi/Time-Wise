@@ -6,8 +6,8 @@ import { errorStore, modalStore, studyConfigStore } from "@/stores";
 import Button from "../button/Button";
 import { Typography } from "@/constants/Typography";
 
-const StudySettingsModal = () => {
-  const { setStudySettings, studySettings } = studyConfigStore();
+const BreaksModal = () => {
+  const { setBreaksSettings, breaksSettings } = studyConfigStore();
   const { errors, setErrors } = errorStore();
   const { toggleModal, isModalVisible } = modalStore();
   const viewRef = useRef<Animatable.View>(null);
@@ -18,20 +18,20 @@ const StudySettingsModal = () => {
   const numberOfBreaksRef = useRef("");
 
   useEffect(() => {
-    timeBetweenBreaksRef.current = studySettings.timeBetweenBreaks.toString();
-    numberOfBreaksRef.current = studySettings.numberOfBreaks.toString();
-  }, [studySettings]);
+    timeBetweenBreaksRef.current = breaksSettings.timeBetweenBreaks.toString();
+    numberOfBreaksRef.current = breaksSettings.numberOfBreaks.toString();
+  }, [breaksSettings]);
 
   const handleClose = async () => {
     if (viewRef.current) {
-      await viewRef.current?.animate("fadeOutLeft", 300);
+      await viewRef.current?.animate("fadeOutDown", 300);
       timeBetweenBreaksRef.current = "0";
       numberOfBreaksRef.current = "0";
       setErrors({
         breakInterval: false,
         breakFrequency: false,
       });
-      setStudySettings({
+      setBreaksSettings({
         timeBetweenBreaks: 0,
         numberOfBreaks: 0,
       });
@@ -40,13 +40,12 @@ const StudySettingsModal = () => {
   };
 
   const handleInputChange = (
-    key: keyof typeof studySettings,
+    key: keyof typeof breaksSettings,
     value: string,
     inputRef: React.MutableRefObject<string>
   ) => {
     inputRef.current = value;
 
-    // Clear errors if a valid value is entered
     if (Number(value) > 0) {
       setErrors({
         ...errors,
@@ -55,7 +54,7 @@ const StudySettingsModal = () => {
     }
   };
 
-  const saveStudySettings = () => {
+  const savebreaksSettings = () => {
     const timeBetweenBreaks = Number(timeBetweenBreaksRef.current);
     const numberOfBreaks = Number(numberOfBreaksRef.current);
     const isValid = timeBetweenBreaks > 0 && numberOfBreaks > 0;
@@ -68,7 +67,7 @@ const StudySettingsModal = () => {
         },
       }));
     } else {
-      setStudySettings({
+      setBreaksSettings({
         timeBetweenBreaks,
         numberOfBreaks,
       });
@@ -86,19 +85,19 @@ const StudySettingsModal = () => {
     >
       <Animatable.View
         ref={viewRef}
-        animation="fadeInLeft"
+        animation="fadeInUp"
         duration={300}
         style={styles.centeredView}
       >
         <View style={styles.modalView}>
-          <View style={styles.studySettingsModalInputDiv}>
-            <Text style={styles.studySettingsModalInputText}>
+          <View style={styles.breaksSettingsModalInputDiv}>
+            <Text style={styles.breaksSettingsModalInputText}>
               Set number of breaks
             </Text>
             <View>
               <TextInput
                 style={[
-                  styles.studySettingsModalInput,
+                  styles.breaksSettingsModalInput,
                   errors.breakInterval && {
                     borderWidth: 1,
                     borderColor: "red",
@@ -118,20 +117,20 @@ const StudySettingsModal = () => {
               ></TextInput>
               {errors.breakInterval && (
                 <Text style={styles.errorText}>
-                  Break interval is required.
+                  Number of breaks is required.
                 </Text>
               )}
             </View>
           </View>
 
-          <View style={styles.studySettingsModalInputDiv}>
-            <Text style={styles.studySettingsModalInputText}>
+          <View style={styles.breaksSettingsModalInputDiv}>
+            <Text style={styles.breaksSettingsModalInputText}>
               Set time between breaks
             </Text>
             <View>
               <TextInput
                 style={[
-                  styles.studySettingsModalInput,
+                  styles.breaksSettingsModalInput,
                   errors.breakFrequency && {
                     borderWidth: 1,
                     borderColor: theme.error,
@@ -147,7 +146,7 @@ const StudySettingsModal = () => {
               ></TextInput>
               {errors.breakFrequency && (
                 <Text style={styles.errorText}>
-                  Break frequency is required.
+                  Time between breaks is required.
                 </Text>
               )}
             </View>
@@ -156,7 +155,7 @@ const StudySettingsModal = () => {
           <View style={styles.buttonsContainer}>
             <Button
               title="Set up"
-              onPress={saveStudySettings}
+              onPress={savebreaksSettings}
               backgroundColor={theme.primary}
               textColor={theme.onPrimary}
             />
@@ -200,15 +199,15 @@ const getStyles = (theme: any) =>
       shadowRadius: 4,
       elevation: 5,
     },
-    studySettingsModalInputDiv: {
+    breaksSettingsModalInputDiv: {
       gap: 8,
     },
-    studySettingsModalInputText: {
+    breaksSettingsModalInputText: {
       fontSize: 18,
       color: theme.onSurface,
       fontFamily: Typography.fontFamily.label,
     },
-    studySettingsModalInput: {
+    breaksSettingsModalInput: {
       padding: 8,
       fontSize: 16,
       borderRadius: 5,
@@ -221,6 +220,7 @@ const getStyles = (theme: any) =>
       color: theme.error,
       fontSize: 14,
       marginTop: 10,
+      fontFamily: Typography.fontFamily.button,
     },
     buttonsContainer: {
       flexDirection: "row",
@@ -230,4 +230,4 @@ const getStyles = (theme: any) =>
     },
   });
 
-export default StudySettingsModal;
+export default BreaksModal;

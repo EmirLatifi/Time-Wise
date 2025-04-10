@@ -10,7 +10,7 @@ import {
 export const useStudyTimer = () => {
   const { isActive, isPaused, breakCount, isBreakTime, setIsBreakTime, time } =
     studyTimerStore();
-  const { studySettings } = studyConfigStore();
+  const { breaksSettings } = studyConfigStore();
   const { playBreakSound, sound } = soundStore();
   const { showAlert } = alertStore();
 
@@ -31,8 +31,8 @@ export const useStudyTimer = () => {
       const shouldBreak =
         elapsedMinutes > 0 &&
         isExactMinute &&
-        elapsedMinutes % studySettings.timeBetweenBreaks === 0 &&
-        breakCount < studySettings.numberOfBreaks;
+        elapsedMinutes % breaksSettings.timeBetweenBreaks === 0 &&
+        breakCount < breaksSettings.numberOfBreaks;
 
       if (shouldBreak && !isBreakTime) {
         playBreakSound();
@@ -45,7 +45,7 @@ export const useStudyTimer = () => {
 
       return { time: newTime };
     },
-    [studySettings, breakCount, isBreakTime, playBreakSound]
+    [breaksSettings, breakCount, isBreakTime, playBreakSound]
   );
 
   // Timer ticking
@@ -96,7 +96,7 @@ export const useStudyTimer = () => {
     showAlert({
       type: "confirmation",
       title: "Reset Progress",
-      message: "Are you sure you want to reset your study time and set up?",
+      message: "Are you sure you want to reset your study time or breaks?",
       onConfirm: handleRestart,
     });
   }, [handleRestart, showAlert]);
@@ -104,7 +104,7 @@ export const useStudyTimer = () => {
   return {
     breakCount,
     isBreakTime,
-    studySettings,
+    breaksSettings,
     handleResumeFromBreak,
     handleStart,
     handlePause,
